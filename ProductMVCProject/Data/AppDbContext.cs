@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProductMVCProject.Models;
 
 namespace ProductMVCProject.Data
 {
@@ -8,5 +9,6 @@ namespace ProductMVCProject.Data
         {
             
         }
+        public DbSet<Product> Products { get; set; }
     }
 }
