@@ -14,6 +14,5 @@ namespace ProductMVCProject.Models
         public string? Description { get; set; }
         [Range(0,int.MaxValue, ErrorMessage = "Stock Must Be Positive")]
         public int Stock { get; set; }
-
     }
 }

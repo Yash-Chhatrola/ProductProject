@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Product>
+﻿@* @model IEnumerable<Product> *@
 
-<h1>Product</h1>
+@* <h1>Product</h1>
 <hr />
 <p>
     <a class="btn btn-success" asp-controller="Product" asp-action="Create">Create New Product</a>
@@ -35,4 +35,72 @@
             }
         
     </tbody>
-</table>
+</table> *@
+
+@model IEnumerable<ProductMVCProject.Models.Product>
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+<h1>Product</h1>
+<hr />
+
+<p>
+    <a class="btn btn-success" asp-controller="Product" asp-action="Create">Create New Product</a>
+</p>
+
+<div id="product-table"></div>
+
+<link href="https://unpkg.com/tabulator-tables@6.3.0/dist/css/tabulator.min.css" rel="stylesheet" />
+<link href="~/css/tabulator.css" rel="stylesheet" />
+<script src="https://unpkg.com/tabulator-tables@6.3.0/dist/js/tabulator.min.js"></script>
+
+<script>
+    // Convert MVC Model -> JSON -> Tabulator
+    const tableData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+
+    const table = new Tabulator("#product-table", {
+        // maxHeight: "100%",
+        // minHeight: 300,
+        layout: "fitColumns",
+        responsiveLayout:true,
+        resizableColumnGuide:true,
+        data: tableData,
+        pagination: true,
+        paginationSize: 8,
+        paginationSizeSelector:[3, 6, 8, 10],
+        paginationCounter:"rows",
+        movableRows:true,
+        movableColumns: true,
+        tooltips: true,
+        groupBy:"Description",
+        columns: [
+            { formatter:"rownum", headerSort:true, hozAlign:"center", resizable:false, frozen:true, width:20},
+            { title: "Id", field: "Id", width: 80, sorter: "number" },
+            { title: "Name", field: "Name", sorter: "string" ,frozen: true },
+            { title: "Price", field: "Price", sorter: "number" },
+            { title: "Description", field: "Description", sorter: "string" },
+            { title: "Stock", field: "Stock", sorter: "number",bottomCalc:"sum" },
+
+            {
+                title: "Edit",
+                width: 90,
+                formatter: () => "<button class='btn btn-primary btn-sm'>Edit</button>",
+                cellClick: (e, cell) => {
+                    const row = cell.getRow().getData();
+                    window.location.href = `/Product/Edit/${row.Id}`;
+                }
+            },
+            {
+                title: "Delete",
+                width: 100,
+                formatter: () => "<button class='btn btn-danger btn-sm'>Delete</button>",
+                cellClick: (e, cell) => {
+                    const row = cell.getRow().getData();
+                    window.location.href = `/Product/Delete/${row.Id}`;
+                }
+            }
+        ]
+    });
+</script>

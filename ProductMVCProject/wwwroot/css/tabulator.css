@@ -1,0 +1,108 @@
+﻿/*body {
+}*/
+
+/*Theme the Tabulator element*/
+/*#product-table {
+    background-color: #ccc;
+    border: 1px solid #333;
+    border-radius: 10px;
+}*/
+
+    /*Theme the header*/
+    /*#product-table .tabulator-header {
+        background-color: #333;
+        color: #fff;
+    }*/
+
+        /*Allow column header names to wrap lines*/
+        /*#product-table .tabulator-header .tabulator-col,
+        #product-table .tabulator-header .tabulator-col-row-handle {
+            white-space: normal;
+        }*/
+
+    /*Color the table rows*/
+    /*#product-table .tabulator-tableholder .tabulator-table .tabulator-row {
+        color: #fff;
+        background-color: #666;
+    }*/
+
+        /*Color even rows*/
+        /*#product-table .tabulator-tableholder .tabulator-table .tabulator-row:nth-child(even) {
+            background-color: #444;
+        }*/
+
+
+#product-table {
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-family: "Segoe UI", sans-serif;
+}
+
+    /* ===== HEADER STYLE ===== */
+    #product-table .tabulator-header {
+        background-color: #0d4d7c; /* dark blue */
+        color: #ffffff;
+        font-weight: 600;
+        border-bottom: 2px solid #0b3e63;
+    }
+
+    /* Column title */
+    #product-table .tabulator-col {
+        background-color: #0d4d7c;
+        border-right: 1px solid #0b3e63;
+    }
+
+    /* Header text */
+    #product-table .tabulator-col-title {
+        color: #ffffff;
+    }
+
+    /* ===== ROW STRIPES ===== */
+    #product-table .tabulator-row:nth-child(even) {
+        background-color: #f3f4f6;
+    }
+
+    #product-table .tabulator-row:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    /* Hover effect */
+    #product-table .tabulator-row:hover {
+        background-color: #e0f2ff;
+    }
+
+    /* ===== CELL STYLE ===== */
+    #product-table .tabulator-cell {
+        border-right: 1px solid #e5e7eb;
+    }
+
+    /* ===== PAGINATION STYLE ===== */
+    #product-table .tabulator-footer {
+        background-color: #ffffff;
+        border-top: 1px solid #d1d5db;
+    }
+
+    /* Page number buttons */
+    #product-table .tabulator-page {
+        border-radius: 50%;
+        padding: 6px 12px;
+        margin: 0 3px;
+    }
+
+        /* Active page */
+        #product-table .tabulator-page.active {
+            background-color: #0d4d7c;
+            color: white;
+        }
+
+    /* Page size dropdown */
+    #product-table select {
+        border-radius: 6px;
+        padding: 4px 6px;
+    }
+
+    /* ===== SORT ARROWS COLOR ===== */
+    #product-table .tabulator-arrow {
+        border-top-color: #ffffff !important;
+        border-bottom-color: #ffffff !important;
+    }
