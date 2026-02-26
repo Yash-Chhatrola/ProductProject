@@ -20,12 +20,12 @@ namespace ProductMVCProject.Controllers
             return View(products); 
         }
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name, Price, Description, Stock")]Product model)
+        public async Task<IActionResult> Create([Bind("Id, Name, Price, Description, Stock")]Product model)
         {
             if (ModelState.IsValid)
             {
@@ -95,6 +95,19 @@ namespace ProductMVCProject.Controllers
             {
                 return NotFound();
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> BulkDelete([FromBody] List<int> ids)
+        {
+            if (ids == null || ids.Count == 0)
+                return BadRequest("No ids received.");
+
+            var products = await _context.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+
+            _context.Products.RemoveRange(products);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { deleted = products.Count });
         }
     }
 }

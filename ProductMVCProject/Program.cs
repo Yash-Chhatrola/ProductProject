@@ -6,7 +6,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<AppDbContext>(Option => Option.UseSqlServer(builder.Configuration.GetConnectionString("ProductConnection")));
+
+var islaptop = builder.Configuration.GetValue<bool>("islaptop");
+var ismysql = builder.Configuration.GetValue<bool>("ismysql");
+
+var constr = ismysql ? builder.Configuration.GetConnectionString("mysqlconnection") : islaptop ? builder.Configuration.GetConnectionString("laptopconnection") : builder.Configuration.GetConnectionString("ProductConnection");
+
+if (ismysql)
+{   
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(constr, ServerVersion.AutoDetect(constr)));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(Options =>
+    Options.UseSqlServer(constr));
+}
 
 var app = builder.Build();
 

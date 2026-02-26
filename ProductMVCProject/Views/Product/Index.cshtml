@@ -52,6 +52,12 @@
 
 <div id="product-table"></div>
 
+<div style="margin-top:10px; text-align:right;">
+    <button id="btnDeleteSelected" class="btn btn-danger btn-sm" disabled>
+        Delete Selected
+    </button>
+</div>
+
 <link href="https://unpkg.com/tabulator-tables@6.3.0/dist/css/tabulator.min.css" rel="stylesheet" />
 <link href="~/css/tabulator.css" rel="stylesheet" />
 <script src="https://unpkg.com/tabulator-tables@6.3.0/dist/js/tabulator.min.js"></script>
@@ -67,6 +73,7 @@
         responsiveLayout:true,
         resizableColumnGuide:true,
         data: tableData,
+        selectable: true,
         pagination: true,
         paginationSize: 8,
         paginationSizeSelector:[3, 6, 8, 10],
@@ -74,10 +81,17 @@
         movableRows:true,
         movableColumns: true,
         tooltips: true,
-        groupBy:"Description",
+        // groupBy:"Description",
+        rowHeader:{headerSort:false, width: 80, resizable: true, frozen:false, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", 
+                    titleFormatter:"rowSelection",
+                    cellClick:function(e, cell){
+                        cell.getRow().toggleSelect();
+                    }
+        },
+
         columns: [
             { formatter:"rownum", headerSort:true, hozAlign:"center", resizable:false, frozen:true, width:20},
-            { title: "Id", field: "Id", width: 80, sorter: "number" },
+            { title: "Id", field: "Id",width: 80,  hozAlign:"center", sorter: "number" },
             { title: "Name", field: "Name", sorter: "string" ,frozen: true },
             { title: "Price", field: "Price", sorter: "number" },
             { title: "Description", field: "Description", sorter: "string" },
@@ -102,5 +116,40 @@
                 }
             }
         ]
+    });
+
+    const btn = document.getElementById("btnDeleteSelected");
+
+    function refreshBtn(){
+        const count = table.getSelectedRows().length;
+        btn.disabled = count === 0;
+        btn.innerText = count === 0 ? "Delete Selected" : `Delete Selected (${count})`;
+    }
+
+    table.on("rowSelectionChanged", refreshBtn);
+    refreshBtn();
+
+    btn.addEventListener("click", async () => {
+        const rows = table.getSelectedRows();
+        if(rows.length === 0) return;
+
+        const ids = rows.map(r => r.getData().Id);
+
+        if(!confirm(`Delete ${ids.length} product(s)?`)) return;
+
+        // ✅ call your bulk delete API
+        const res = await fetch("/Product/BulkDelete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+        });
+
+        if(res.ok){
+            // ✅ remove from UI
+            rows.forEach(r => r.delete());
+            refreshBtn();
+        }else{
+            alert("Delete failed");
+        }
     });
 </script>
