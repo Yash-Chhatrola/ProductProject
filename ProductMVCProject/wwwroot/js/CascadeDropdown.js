@@ -161,6 +161,7 @@
 
 
 $(document).ready(function () {
+
     // Initialize Select2 for all
     $('#Country').select2({
         placeholder: "---Select Country---",
@@ -174,21 +175,24 @@ $(document).ready(function () {
         placeholder: "---Select City---",
         allowClear: true
     });
-    ;
     getCountry();
     $('#State,#City').prop('disabled', true);
     $("#Country").on("change", showState);
     $("#State").on("change", showCity);
+    $("#Savebtn").on("click", function (e) {
+        e.preventDefault(); // Stop page refresh if inside a form
+        SubmitData();       // Call your function
+    });
 });
 
 function getCountry() {
+    showLoader();
     $.getJSON('/Dropdown/Country', function (data) {
         populateDropdown('#Country', data, "Country");
     });
 }
 
 function showState() {
-    ;
     const countryId = $(this).val();
 
     // Clear children immediately
@@ -196,6 +200,7 @@ function showState() {
     resetDropdown('#City', "City");
 
     if (countryId) {
+        showLoader();
         $.getJSON('/Dropdown/State', { id: countryId }, function (data) {
             populateDropdown('#State', data, "State");
             $('#State').prop('disabled', false);
@@ -204,11 +209,11 @@ function showState() {
 }
 
 function showCity() {
-    ;
     const stateId = $(this).val();
     resetDropdown('#City', "City");
 
     if (stateId) {
+        showLoader();
         $.getJSON('/Dropdown/City', { id: stateId }, function (data) {
             populateDropdown('#City', data, "City");
             $('#City').prop('disabled', false);
@@ -223,6 +228,7 @@ function populateDropdown(selector, data, type) {
     $.each(data, function (i, item) {
         items += `<option value="${item.id}">${item.name}</option>`;
     });
+    hideLoader();
     $(selector).html(items).trigger('change.select2'); // Notify Select2 of the change
 }
 
@@ -233,3 +239,52 @@ function resetDropdown(selector, type) {
         .trigger('change.select2');
 }
 
+function SubmitData() {
+    showLoader();
+    var countryId = $('#Country').val();
+    var stateId = $('#State').val();
+    var cityId = $('#City').val();
+
+    if (countryId == null || countryId == "") {
+        alert("Country is Null");
+        return
+    }
+    
+    //var payload = {
+    //   CountryId,StateId,CityId
+    //}
+    //$.ajax({
+    //    url: '/Dropdown/SaveData',
+    //    type: 'POST',
+    //    contentType: 'application/json', // Required for [FromBody]
+    //    data: JSON.stringify(payload),   // Convert object to string
+    //    success: function (response) {
+    //        hideLoader();
+    //        console.log(response);
+    //        alert("Names saved successfully!");
+    //    },
+    //    error: function () {
+    //        hideLoader();
+    //        alert("Failed to save");
+    //    }
+    //});
+
+    $.ajax({
+        url: '/Dropdown/SaveData1',
+        type: 'POST',
+        data: {
+            CountryId: countryId,
+            StateId: stateId,
+            CityId: cityId
+        },
+        success: function (response) {
+            hideLoader();
+            console.log(response);
+            alert("Names saved successfully!");
+        },
+        error: function () {
+            hideLoader();
+            alert("Failed to save");
+        }
+    });
+}

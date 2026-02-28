@@ -9,8 +9,20 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProductMVCProject.styles.css" asp-append-version="true" />
+    <link href="~/css/loader.css" rel="stylesheet" />
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';  // Show loader
+        }
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';  // Hide loader
+        }
+    </script>
 </head>
 <body>
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -52,14 +64,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded",function(){
-            @if(TempData["Notification"] != null)    
+            @if (TempData["Notification"] != null)
             {
-                <Text>
-                    swal.fire({
-                        icon: '@TempData["NotificationType"]',
-                        title:'@TempData["Notification"]'
-                    });
-                </Text>
+                        <Text>
+                            swal.fire({
+                                icon: '@TempData["NotificationType"]',
+                                title:'@TempData["Notification"]'
+                            });
+                        </Text>
             }
         });
     </script>
