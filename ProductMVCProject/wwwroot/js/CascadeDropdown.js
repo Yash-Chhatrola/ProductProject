@@ -161,19 +161,50 @@
 
 
 $(document).ready(function () {
-
     // Initialize Select2 for all
+    $('#Country, #State, #City').select2({
+        matcher: function (params, data) {
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+
+            var searchTerms = params.term.toUpperCase().split(' ');
+            var dataText = data.text.toUpperCase();
+            var match = true;
+
+            searchTerms.forEach(function (term) {
+                if (dataText.indexOf(term) === -1) {
+                    match = false;
+                }
+            });
+
+            if (match) {
+                return data;
+            }
+            return null;
+        }
+    });
     $('#Country').select2({
         placeholder: "---Select Country---",
-        allowClear: true
+        allowClear: true,
+        theme: "classic",
+        selectOnClose: false,
+    });
+    $('#Country,#State,#City').on('select2:open', function () {
+        const el = document.querySelector('.select2-container--open .select2-search__field');
+        if (el) el.focus();
     });
     $('#State').select2({
         placeholder: "---Select State---",
-        allowClear: true
+        allowClear: true,
+        theme: "classic",
+        selectOnClose: false,
     });
     $('#City').select2({
         placeholder: "---Select City---",
-        allowClear: true
+        allowClear: true,
+        theme: "classic",
+        selectOnClose: true,
     });
     getCountry();
     $('#State,#City').prop('disabled', true);
@@ -182,6 +213,9 @@ $(document).ready(function () {
     $("#Savebtn").on("click", function (e) {
         e.preventDefault(); // Stop page refresh if inside a form
         SubmitData();       // Call your function
+        resetDropdown('#State', "State");
+        resetDropdown('#City', "City");
+        getCountry();
     });
 });
 
@@ -227,7 +261,7 @@ function populateDropdown(selector, data, type) {
     ;
     $.each(data, function (i, item) {
         items += `<option value="${item.id}">${item.name}</option>`;
-    });
+    }); 
     hideLoader();
     $(selector).html(items).trigger('change.select2'); // Notify Select2 of the change
 }
@@ -242,22 +276,43 @@ function resetDropdown(selector, type) {
 function SubmitData() {
     showLoader();
     var countryId = $('#Country').val();
-    var stateId = $('#State').val();
-    var cityId = $('#City').val();
+    var stateId = parseInt($('#State').val(), 10) || 0;
+    var cityId = parseInt($('#City').val(), 10) || 0;
 
     if (countryId == null || countryId == "") {
         alert("Country is Null");
         return
     }
-    
-    //var payload = {
-    //   CountryId,StateId,CityId
-    //}
+
+    var payload = {
+       CountryId: countryId,
+       StateId: stateId ?? 0,
+       CityId: cityId ?? 0
+    }
+    $.ajax({
+        url: '/Dropdown/SaveData',
+        type: 'POST',
+        contentType: 'application/json', // Required for [FromBody]
+        data: JSON.stringify(payload),   // Convert object to string
+        success: function (response) {
+            hideLoader();
+            console.log(response);
+            loadLatestSingle();
+        },
+        error: function () {
+            hideLoader();
+            alert("Failed to save");
+        }
+    });
+
     //$.ajax({
-    //    url: '/Dropdown/SaveData',
+    //    url: '/Dropdown/SaveData1',
     //    type: 'POST',
-    //    contentType: 'application/json', // Required for [FromBody]
-    //    data: JSON.stringify(payload),   // Convert object to string
+    //    data: {
+    //        CountryId: countryId,
+    //        StateId: stateId,
+    //        CityId: cityId
+    //    },
     //    success: function (response) {
     //        hideLoader();
     //        console.log(response);
@@ -268,23 +323,24 @@ function SubmitData() {
     //        alert("Failed to save");
     //    }
     //});
-
-    $.ajax({
-        url: '/Dropdown/SaveData1',
-        type: 'POST',
-        data: {
-            CountryId: countryId,
-            StateId: stateId,
-            CityId: cityId
-        },
-        success: function (response) {
-            hideLoader();
-            console.log(response);
-            alert("Names saved successfully!");
-        },
-        error: function () {
-            hideLoader();
-            alert("Failed to save");
+}
+function loadLatestSingle() {
+    $.getJSON('/Dropdown/LatestSingle', function (data) {
+        if (!data) {
+            $('#SingleResultBox').html("<b>No record found</b>");
+            return;
         }
+
+        var html = `
+            <div class="alert alert-success">
+                <b>Saved (Single)</b><br/>
+                Country: ${data.countryName}<br/>
+                State: ${data.stateName}<br/>
+                City: ${data.cityName}<br/>
+                Date: ${data.dataCreated}
+            </div>
+        `;
+
+        $('#SingleResultBox').html(html);
     });
 }

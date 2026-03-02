@@ -5,29 +5,66 @@
 }
 <h1>CascadeDropdown</h1><hr /><br />
 <head>
+    <style>
+        /* Checkbox is just UI - select2 handles the click */
+        .select2-results__option input[type="checkbox"] {
+            pointer-events: none;
+        }
+    </style>
 </head>
 <div class="container">
     <div class="row">
+        <h2>Single Country Selected:-</h2>
         <div class="col-6 offset-3">
             <form method="post">
                 <div class="form-group">
-                    <label>Country:</label>
+                    <label for="Country">Country:</label>
                     <select class="form-control mt-1" id="Country">
                     </select>
                 </div>
                 <div class="form-group mt-4">
-                    <label>State:</label>
+                    <label for="State">State:</label>
                     <select class="form-control mt-1" id="State">
                     </select>
                 </div>
                 <div class="form-group mt-4">
-                    <label>City:</label>
+                    <label for="City">City:</label>
                     <select class="form-control mt-1" id="City">
                     </select>
                 </div>
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-md btn-primary float-end" id="Savebtn">Save</button>
                 </div>
+                <div id="SingleResultBox" style="margin-top:80px;"></div>
+            </form>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="container">
+    <div class="row">
+        <h2>Multiple Country Selected:-</h2>
+        <div class="col-6 offset-3">
+            <form method="post">
+                <div class="form-group">
+                    <label for="CountryMulti">MCountry:</label>
+                    <select class="form-control mt-1" multiple id="CountryMulti">
+                    </select>
+                </div>
+                <div class="form-group mt-4">
+                    <label for="StateMulti">MState:</label>
+                    <select class="form-control mt-1" id="StateMulti">
+                    </select>
+                </div>
+                <div class="form-group mt-4">
+                    <label for="CityMulti">City:</label>
+                    <select class="form-control mt-1" id="CityMulti">
+                    </select>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="button" class="btn btn-md btn-primary float-end" id="SavebtnMulti">Save Multi</button>
+                </div>
+                <div id="MultiResultBox" style="margin-top:80px;"></div>
             </form>
         </div>
     </div>
@@ -38,3 +75,4 @@
 <script src="~/lib/jquery/dist/jquery.slim.js"></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/cascadedropdown.js"></script>
+<script src="~/js/cascade-multi.js"></script>

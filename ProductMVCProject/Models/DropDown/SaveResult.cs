@@ -14,7 +14,14 @@ namespace ProductMVCProject.Models.DropDown
     public class DrpRequestDTO
     {
         public int CountryId { get; set; }
-        public int StateId { get; set; }
-        public int CityId { get; set; } 
+        public int? StateId { get; set; } = 0;
+        public int? CityId { get; set; } = 0;
+    }
+
+    public class DrpRequestDTOMulti
+    {
+        public List<int> CountryId { get; set; } = new(); // ✅ array
+        public int? StateId { get; set; } = 0;
+        public int? CityId { get; set; } = 0;
     }
 }
