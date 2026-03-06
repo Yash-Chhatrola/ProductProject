@@ -25,7 +25,7 @@ namespace ProductMVCProject.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id, Name, Price, Description, Stock")]Product model)
+        public async Task<IActionResult> Create([Bind("Name, Price, Description, Stock")]Product model)
         {
             if (ModelState.IsValid)
             {

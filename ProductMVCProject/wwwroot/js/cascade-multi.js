@@ -30,25 +30,25 @@ $(document).ready(function () {
         placeholder: "---Select Countries---",
         allowClear: true,
         theme: "classic",
-        closeOnSelect: false,     // ✅ keep open to select many
+        closeOnSelect: false,     //  keep open to select many
         width: "100%",
         templateResult: countryTemplateResult,
         templateSelection: countryTemplateSelection,
         escapeMarkup: function (m) { return m; } // allow HTML
     });
 
-    // ✅ When open, focus search box safely
+    //  When open, focus search box safely
     $('#CountryMulti').on('select2:open', function () {
         syncAllCheckboxes();
         const el = document.querySelector('.select2-container--open .select2-search__field');
         if (el) el.focus();
     });
-    // ✅ When one item selected -> check that item checkbox
+    //  When one item selected -> check that item checkbox
     $("#CountryMulti").on("select2:select", function (e) {
         setCheckbox(e.params.data, true);
     });
 
-    // ✅ When one item unselected -> uncheck that item checkbox
+    //  When one item unselected -> uncheck that item checkbox
     $("#CountryMulti").on("select2:unselect", function (e) {
         setCheckbox(e.params.data, false);
     });
@@ -75,7 +75,7 @@ $(document).ready(function () {
     getCountryMulti();
     $('#StateMulti,#CityMulti').prop('disabled', true);
 
-    $("#CountryMulti").on("select2:close", showStateMulti); // ✅ load only once, after done selecting
+    $("#CountryMulti").on("select2:close", showStateMulti); //  load only once, after done selecting
     $("#StateMulti").on("change", showCityMulti);
 
     $("#SavebtnMulti").on("click", function (e) {
@@ -103,7 +103,7 @@ function formatCountryOption(option) {
     return $html;
 }
 
-// ✅ Show selected values in input (normal text)
+//  Show selected values in input (normal text)
 function formatCountrySelection(option) {
     return option.text;
 }
@@ -116,19 +116,19 @@ function getCountryMulti() {
 }
 
 function showStateMulti() {
-    const countryId = $(this).val(); // ✅ now this is ARRAY because multiple
+    const countryId = $(this).val(); //  now this is ARRAY because multiple
 
     resetDropdownMulti('#StateMulti', "State");
     resetDropdownMulti('#CityMulti', "City");
 
-    // ✅ REQUIRED CHANGE: for multi, check length
+    //  REQUIRED CHANGE: for multi, check length
     if (countryId && countryId.length > 0) {
         showLoader();
         $.ajax({
             url: '/Dropdown/StateMulti',
             type: 'GET',
-            data: { id: countryId },   // ✅ send array
-            traditional: true,         // ✅ REQUIRED CHANGE
+            data: { id: countryId },   //  send array
+            traditional: true,         //  REQUIRED CHANGE
             success: function (data) {
                 populateDropdownMulti('#StateMulti', data, "State");
                 $('#StateMulti').prop('disabled', false);
@@ -170,7 +170,7 @@ function resetDropdownMulti(selector, type) {
 function SubmitDataMulti() {
     showLoader();
 
-    var countryId = $('#CountryMulti').val() || [];// ✅ ARRAY
+    var countryId = $('#CountryMulti').val() || [];//  ARRAY
     var stateId = parseInt($('#StateMulti').val(), 10) || 0;
     var cityId = parseInt($('#CityMulti').val(), 10) || 0;
 
@@ -180,7 +180,7 @@ function SubmitDataMulti() {
     }
 
     var payload = {
-        CountryId: countryId.map(x => parseInt(x, 10)), // ✅ ARRAY (you must handle in backend if saving)
+        CountryId: countryId.map(x => parseInt(x, 10)), //  ARRAY (you must handle in backend if saving)
         StateId: stateId ?? 0,
         CityId: cityId ?? 0
     };
@@ -202,7 +202,7 @@ function SubmitDataMulti() {
     });
 }
 function loadLatestMulti() {
-    $.getJSON('/Dropdown/LatestMulti', function (data) {
+    $.getJSON('/Dropdown/LatestData', function (data) {
         if (!data) {
             $('#MultiResultBox').html("<b>No record found</b>");
             return;

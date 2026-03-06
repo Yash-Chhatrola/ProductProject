@@ -124,25 +124,8 @@ namespace ProductMVCProject.Controllers
             return Ok(new { success = true });
         }
 
-        // shows latest single save
-        public JsonResult LatestSingle()
-        {
-            var last = context.saveResults
-                .OrderByDescending(x => x.Id)
-                .Select(x => new {
-                    x.Id,
-                    x.CountryName,
-                    x.StateName,
-                    x.CityName,
-                    x.DataCreated
-                })
-                .FirstOrDefault();
-
-            return new JsonResult(last);
-        }
-
-        // shows latest multi save (same table, but countryname has multiple text)
-        public JsonResult LatestMulti()
+        // shows latest Data save
+        public JsonResult LatestData()
         {
             var last = context.saveResults
                 .OrderByDescending(x => x.Id)

@@ -204,7 +204,7 @@ $(document).ready(function () {
         placeholder: "---Select City---",
         allowClear: true,
         theme: "classic",
-        selectOnClose: true,
+        selectOnClose: false,
     });
     getCountry();
     $('#State,#City').prop('disabled', true);
@@ -325,7 +325,7 @@ function SubmitData() {
     //});
 }
 function loadLatestSingle() {
-    $.getJSON('/Dropdown/LatestSingle', function (data) {
+    $.getJSON('/Dropdown/LatestData', function (data) {
         if (!data) {
             $('#SingleResultBox').html("<b>No record found</b>");
             return;
